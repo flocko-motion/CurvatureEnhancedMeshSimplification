@@ -1,4 +1,4 @@
-package de.ftk.mesh.optimizer;
+package de.ftk.threemf.mesh;
 
 import java.util.*;
 

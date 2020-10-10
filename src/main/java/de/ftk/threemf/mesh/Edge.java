@@ -1,6 +1,4 @@
-package de.ftk.mesh.optimizer;
-
-import java.util.*;
+package de.ftk.threemf.mesh;
 
 public class Edge implements Comparable<Edge>
 {

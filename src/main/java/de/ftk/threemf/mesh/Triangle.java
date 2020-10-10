@@ -1,11 +1,11 @@
-package de.ftk.mesh.optimizer;
+package de.ftk.threemf.mesh;
 
 import java.util.*;
 
 public class Triangle implements Comparable<Triangle>
 {
     final Vertex[] vertices;
-    final Vector normal;
+    final de.ftk.threemf.mesh.Vector normal;
     final int hash;
     final double area;
     final double[] angle;
@@ -16,15 +16,15 @@ public class Triangle implements Comparable<Triangle>
         vertices[0] = v1;
         vertices[1] = v2;
         vertices[2] = v3;
-        Vector edge1 = vertices[1].v.sub(vertices[0].v);
-        Vector edge2 = vertices[2].v.sub(vertices[0].v);
-        Vector edge3 = vertices[1].v.sub(vertices[2].v);
-        Vector cross = Vector.cross(edge1, edge2);
+        de.ftk.threemf.mesh.Vector edge1 = vertices[1].v.sub(vertices[0].v);
+        de.ftk.threemf.mesh.Vector edge2 = vertices[2].v.sub(vertices[0].v);
+        de.ftk.threemf.mesh.Vector edge3 = vertices[1].v.sub(vertices[2].v);
+        de.ftk.threemf.mesh.Vector cross = de.ftk.threemf.mesh.Vector.cross(edge1, edge2);
         area = cross.length();
         normal = cross.normalize();
-        angle[0] = Vector.getAngle(edge1, edge2);
-        angle[1] = Vector.getAngle(edge1, edge3);
-        angle[2] = Vector.getAngle(edge3, edge2.mul(-1));
+        angle[0] = de.ftk.threemf.mesh.Vector.getAngle(edge1, edge2);
+        angle[1] = de.ftk.threemf.mesh.Vector.getAngle(edge1, edge3);
+        angle[2] = de.ftk.threemf.mesh.Vector.getAngle(edge3, edge2.mul(-1));
         
         hash = Arrays.deepHashCode(vertices);
     }
