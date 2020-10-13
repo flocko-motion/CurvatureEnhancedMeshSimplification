@@ -1,5 +1,9 @@
 # 3MF Curvature Enhanced Mesh Simplification
 
+IN DEVELOPMENT
+
+This project is currently not runnable - it's under heavy development and will be fully functional around 2021-02.
+
 Mesh optimization for 3MF files as a webservice.
 
 The method presented is an iterative edge contraction algorithm based on the work of Garland and Heckberts 
