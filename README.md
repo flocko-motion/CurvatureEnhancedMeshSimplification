@@ -13,7 +13,7 @@ and then placed back inside the zip file.
 Next development step is:
 Stream 3MF file, unzip on-the-fly, optimize meshes and pack everything back into 3MF file.
 
-# Project description 
+## Project description 
 
 Library for stream based simplification of 3MF files. Streams could origin from e.g. file, network connection or 
 database and be streamed back into any sink. This allows for integrating this library in a variety of use cases.
@@ -24,7 +24,7 @@ The original algorithm is improved by enhancing the quadratic error metrics with
 based on discrete gaussian curvature, which is estimated efficiently through the Gauss-Bonnet theorem, 
 to account for the presence of fine details during the edge decimation process.
 
-# Credits
+## Credits
 
 The algorithm was created by Garland and Heckberts and is described in "Mesh Simplification by Curvature-Enhanced Quadratic Error Metrics". 
 
