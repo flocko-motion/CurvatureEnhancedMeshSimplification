@@ -5,25 +5,23 @@ import java.nio.file.*;
 import java.nio.*;
 import java.util.*;
 
-class IoFileSTL {
-    /**
-     * Read mesh from file
-     *
-     * @param path
-     * @return mesh
-     * @throws IOException
-     */
-    public static Mesh readMesh(String path) throws IOException {
-        byte[] allBytes = Files.readAllBytes(Paths.get(path));
-        // bytes -> triangles -> mesh
-        return new Mesh(readBinary(allBytes));
+class FileSTL extends File3D {
+
+    public FileSTL(File file) throws IOException {
+        byte[] allBytes = Files.readAllBytes(Paths.get(file.getAbsolutePath()));
+        meshes.add(new Mesh(readBinary(allBytes)));
     }
 
-    public static ArrayList<Triangle> readBinary(byte[] allBytes) {
+    public final void toFile(File file) {
+        writeMesh(meshes.get(0), file.getAbsolutePath());
+    }
+
+
+    public final ArrayList<Triangle> readBinary(byte[] allBytes) {
         DataInputStream in = new DataInputStream(new ByteArrayInputStream(allBytes));
         ArrayList<Triangle> triangles = new ArrayList<>();
         // collection of unique vertices
-        HashMap<de.ftk.threemf.mesh.Vector, Vertex> verticesUnique = new HashMap<de.ftk.threemf.mesh.Vector, Vertex>();
+        HashMap<de.ftk.threemf.mesh.Vector, Vertex> verticesUnique = new HashMap<>();
         try {
             // skip the header
             byte[] header = new byte[80];
@@ -71,7 +69,7 @@ class IoFileSTL {
     }
 
     // write mesh into file
-    public static void writeMesh(Mesh mesh, String path) {
+    public static final void writeMesh(Mesh mesh, String path) {
         try {
             File file = new File(path);
             FileOutputStream out = new FileOutputStream(file);
@@ -130,7 +128,10 @@ class IoFileSTL {
                 buf.putFloat((float) t.vertices[2].v.x);
                 buf.putFloat((float) t.vertices[2].v.y);
                 buf.putFloat((float) t.vertices[2].v.z);
-                buf.putShort((short) colors[Math.min(Math.max((int) (10 * (1 - Math.pow(2, -t.curv() * EdgePair.alpha))), 0), 9)]);
+                if(FileSTL.color)
+                    buf.putShort((short) colors[Math.min(Math.max((int) (10 * (1 - Math.pow(2, -t.curv() * EdgePair.alpha))), 0), 9)]);
+                else
+                    buf.putShort((short) (31));
 
                 buf.rewind();
                 buf.get(header);
@@ -141,4 +142,5 @@ class IoFileSTL {
         }
     }
 
+    public static boolean color = false;
 }

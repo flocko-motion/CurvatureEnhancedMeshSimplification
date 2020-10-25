@@ -36,4 +36,16 @@ class Vertex implements Comparable<Vertex>
     }
 
     static double maxCurv = 0;
+
+    @Override
+    public String toString() {
+        return "Vertex" + this.v.toString();
+    }
+
+    public Vector getVector() { return v; }
+
+    public double getX() { return v.x; }
+    public double getY() { return v.y; }
+    public double getZ() { return v.z; }
+
 }

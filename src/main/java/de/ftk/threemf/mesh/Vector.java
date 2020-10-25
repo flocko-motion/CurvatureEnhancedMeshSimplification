@@ -1,5 +1,7 @@
 package de.ftk.threemf.mesh;
 
+import java.util.ArrayList;
+
 public class Vector implements Comparable<Vector>
 {
     public final double x;
@@ -15,7 +17,9 @@ public class Vector implements Comparable<Vector>
         hash = (int)(bits ^ (bits >>> 32));
     }
 
-
+    public Vector(Double[] xyz) {
+        this(xyz[0], xyz[1], xyz[2]);
+    }
 
     public Vector mul(double scale) {
         return new Vector(
@@ -111,4 +115,5 @@ public class Vector implements Comparable<Vector>
     public static Vector mean(Vector a, Vector b){
         return new Vector((a.x+b.x)/2, (a.y+b.y)/2, (a.z+b.z)/2);
     }
+
 }

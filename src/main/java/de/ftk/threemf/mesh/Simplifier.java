@@ -1,15 +1,62 @@
 package de.ftk.threemf.mesh;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.*;
 
+@Slf4j
 public class Simplifier
 {
-    public static Mesh simplifyMesh(Mesh m, double factor)
+    private long maxTrianglesPerMesh;
+    private double shrinkFactor;
+    private double alpha;
+
+    public Simplifier() {
+        // default values
+        maxTrianglesPerMesh = 1000;
+        shrinkFactor = 0.5;
+        alpha = 0.5;
+    }
+
+    public long getMaxTrianglesPerMesh() {
+        return maxTrianglesPerMesh;
+    }
+
+    public void setMaxTrianglesPerMesh(long maxTrianglesPerMesh) {
+        this.maxTrianglesPerMesh = Math.max(1, maxTrianglesPerMesh);
+    }
+
+    public double getShrinkFactor() {
+        return shrinkFactor;
+    }
+
+    public void setShrinkFactor(double shrinkFactor) {
+        this.shrinkFactor = Math.max(0, shrinkFactor);
+    }
+
+    public double getAlpha() {
+        return alpha;
+    }
+
+    public void setAlpha(double alpha) {
+        this.alpha = Math.max(0, alpha);
+    }
+
+    public Mesh simplify(Mesh m) {
+        return Simplifier.simplifyMesh(m, this);
+    }
+
+    private static Mesh simplifyMesh(Mesh m, Simplifier config)
     {
-        System.out.println("mesh loaded");
+        Long maxTriangles = Math.min(config.getMaxTrianglesPerMesh(), Math.round(config.getShrinkFactor() * m.triangles.size()));
+
         HashSet<Triangle> newMesh = new HashSet<Triangle>();
         HashMap<Edge, EdgePair> edgeMap = new HashMap<Edge, EdgePair>();
         IndexedPriorityQueue<EdgePair> edgeQueue = new IndexedPriorityQueue<EdgePair>();
+
+        // we will need a lot of memory - run garbage collector before optimizing the mesh
+        // to have a clean start
+        System.gc();
         
         for(Triangle t : m.triangles)
         {
@@ -66,14 +113,24 @@ public class Simplifier
             t.vertices[2].edges.add(e2);
         }
         
-        System.out.println("start to simplify");
         // start to decimate here
         int best = newMesh.size();
-        while(newMesh.size() > factor * m.triangles.size())
-        {
-            if(newMesh.size()%10000 == 0 && best!=newMesh.size())
-                System.out.println("Reduced to: "+(best = newMesh.size()));
+        long time0 = System.currentTimeMillis();
+        long triangles0 = newMesh.size();
+        logProgress(newMesh.size(), maxTriangles, 0);
 
+        while(newMesh.size() > maxTriangles)
+        {
+            long size = newMesh.size();
+            if(size % 10000 == 0 && best != size && triangles0 != size) {
+
+                long time1 = System.currentTimeMillis();
+                long trianglesPerSecond = Math.round(Float.valueOf(size - triangles0)
+                        / Float.valueOf(time1 - time0) * 1000);
+                time0 = time1;
+                triangles0 = size;
+                logProgress(size, maxTriangles, trianglesPerSecond);
+            }
             boolean valid = true;
 
             EdgePair p =  edgeQueue.poll();
@@ -188,9 +245,18 @@ public class Simplifier
             }
 
         }
-        ArrayList<Triangle> newM = new ArrayList<Triangle>();
+        logProgress(newMesh.size(), maxTriangles, 0);
+        ArrayList<Triangle> newTrianglesList = new ArrayList<Triangle>();
         for(Triangle t : newMesh)
-            newM.add(t);
-        return new Mesh(newM);
+            newTrianglesList.add(t);
+        return new Mesh(newTrianglesList);
+    }
+
+    static void logProgress(long currentTriangles, long maxTriangles, long trianglesPerSecond) {
+        log.info("Triangles: "
+                + String.format("%,8d", currentTriangles)
+                + "/" + String.format("%,8d",maxTriangles)
+                + " (" + String.format("%,8d",trianglesPerSecond) + "/second)"
+                + ", " + SystemWatch.heapStatus());
     }
 }

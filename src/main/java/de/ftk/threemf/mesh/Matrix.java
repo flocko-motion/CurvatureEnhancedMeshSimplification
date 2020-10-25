@@ -9,6 +9,7 @@ final public class Matrix
     Matrix inverse = null;
     Vector bestVector = null;
     Double quadrForm = null;
+
     // create M-by-N matrix of 0's
     public Matrix(){
         x00 = 0; x01 = 0; x02 = 0; x03 = 0;

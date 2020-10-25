@@ -10,7 +10,12 @@ public class Triangle implements Comparable<Triangle>
     final double area;
     final double[] angle;
 
+    public int id;
+
     public Triangle(Vertex v1, Vertex v2, Vertex v3){
+        // triangle id is set by importer and used for debugging
+        id = -1;
+        //
         vertices = new Vertex[3];
         angle = new double[3];
         vertices[0] = v1;
@@ -25,9 +30,18 @@ public class Triangle implements Comparable<Triangle>
         angle[0] = de.ftk.threemf.mesh.Vector.getAngle(edge1, edge2);
         angle[1] = de.ftk.threemf.mesh.Vector.getAngle(edge1, edge3);
         angle[2] = de.ftk.threemf.mesh.Vector.getAngle(edge3, edge2.mul(-1));
-        
         hash = Arrays.deepHashCode(vertices);
     }
+
+    public Triangle(Vertex[] vertices) {
+        this(vertices[0], vertices[1], vertices[2]);
+    }
+
+    @Override
+    public String toString() {
+        return "Triangle_" + id + "(" + vertices[0].toString() + ", " + vertices[1].toString() + ", " + vertices[2].toString() + ")";
+    }
+
 
     public double curv()
     {
