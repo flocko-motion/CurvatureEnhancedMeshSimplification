@@ -26,7 +26,5 @@ to account for the presence of fine details during the edge decimation process.
 
 ## Credits
 
-The algorithm was created by Garland and Heckberts and is described in "Mesh Simplification by Curvature-Enhanced Quadratic Error Metrics". 
-
-The initial implementation of the algorithm was done by Paolo Pellizzoni. 
-
+The algorithm was created and implemented by Paolo Pellizzoni as described in "Mesh Simplification by Curvature-Enhanced Quadratic Error Metrics"
+and is based on the work of Garland and Heckberts. 
